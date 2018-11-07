@@ -1,6 +1,7 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ public class Main {
             map.put(i, 0);
 
         for (Losowanie losowanie: collection) {
-            int [] numbers = losowanie.getLotto();
+            int [] numbers = losowanie.lotto;
             for(int i = 0; i < numbers.length; i++){
                 map.put(numbers[i], map.get(numbers[i]) + 1);
             }
@@ -48,6 +49,7 @@ public class Main {
                         (oldValue, newValue) -> oldValue, LinkedHashMap::new));
 
         System.out.println(String.format("%d najzadzysz wystapien liczb", n));
+
         for(Map.Entry<Integer, Integer> entry : result.entrySet()) {
             if(j == n) {
                 break;
@@ -55,6 +57,30 @@ public class Main {
                 System.out.println(String.format("liczba %d - %d razy", entry.getKey(), entry.getValue()));
                 j++;
             }
+        }
+    }
+    public void binaryWrite(ArrayList<Losowanie> collection) throws FileNotFoundException {
+        try{
+            DataOutputStream output = new DataOutputStream(new FileOutputStream("binary.data"));
+            ByteBuffer byteBuffer = ByteBuffer.allocate(24);
+            IntBuffer intBuffer = byteBuffer.asIntBuffer();
+            for(Losowanie losowanie: collection) {
+                output.writeShort(losowanie.index);
+
+
+//                output.writeLong(Timestamp.valueOf(losowanie.date.atStartOfDay()));
+
+                intBuffer.put(losowanie.lotto);
+                output.write(byteBuffer.array());
+                intBuffer = null;
+            }
+        }
+        catch(FileNotFoundException ex)
+        {
+            System.out.println("Cannot Open the Output File");
+            return;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

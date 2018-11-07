@@ -4,12 +4,12 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class Losowanie {
-    private int index;
-    private LocalDate date;
-    private int[] lotto;
+    public int index;
+    public LocalDate date;
+    public int[] lotto;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-    Losowanie(String line){
+    Losowanie(2String line){
         this.lotto = new int[6];
         String [] fields = line.split("\t", -1);
 
@@ -26,9 +26,5 @@ public class Losowanie {
 
     public String getNumbers (){
         return Arrays.stream(this.lotto).mapToObj(String::valueOf).collect(Collectors.joining(", "));
-    }
-
-    public int[] getLotto(){
-        return this.lotto;
     }
 }
